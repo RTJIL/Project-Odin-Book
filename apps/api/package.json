@@ -1,0 +1,42 @@
+{
+  "name": "express_api_template",
+  "version": "1.0.0",
+  "private": true,
+  "description": "My custom Express API boilerplate",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "migrate": "pnpm exec prisma migrate dev --name",
+    "generate": "pnpm exec prisma generate",
+    "studio": "pnpm exec prisma studio",
+    "generateKeys": "node src/utils/generateKeys.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RTJIL/express_api_template.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/RTJIL/express_api_template/issues"
+  },
+  "homepage": "https://github.com/RTJIL/express_api_template#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "morgan": "^1.10.1"
+  },
+  "devDependencies": {
+    "eslint": "^9.32.0",
+    "jest": "^30.0.5",
+    "prettier": "^3.6.2",
+    "prisma": "^6.13.0",
+    "supertest": "^7.1.4"
+  }
+}
