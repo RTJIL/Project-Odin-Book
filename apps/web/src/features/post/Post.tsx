@@ -3,7 +3,7 @@
 import styles from './post.module.css'
 import { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'next/navigation'
-import type { User, Post, Like } from '@/utils/types'
+import type { User, Post, Like, Comment } from '@/utils/types'
 import { getPostById } from '../services/api'
 import Image from 'next/image'
 import Dropdown from '../feed/components/dropdown/Dropdown'
@@ -12,6 +12,7 @@ import PostContent from '../feed/components/postContent/PostContent'
 import Loading from '@/components/loading/Loading'
 import { follow, unfollow } from '../services/api'
 import CommentsWritter from './components/commentsWritter/commentsWritter'
+import Comments from './components/comments/Comments'
 
 interface PostParams {
   currentUser: User
@@ -21,11 +22,8 @@ interface PostParams {
   onToggleFollow: (authorId: string) => void
 }
 
-export default function Post({
-  currentUser,
-  loading,
-  onToggleFollow,
-}: PostParams) {
+export default function Post({ currentUser, loading }: PostParams) {
+  const [comments, setComments] = useState<Comment[]>([])
   const [post, setPost] = useState<Post | null>(null)
   const [isEditedId, setIsEditedId] = useState<number | null>(null)
   const [userLikes, setUserLikes] = useState<Like[]>([])
@@ -48,16 +46,27 @@ export default function Post({
   console.log(params.postId)
 
   useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const post = await getPostById(params.postId)
-        setPost(post)
-      } catch (err) {
-        console.error(err)
-      }
+  const fetchPost = async () => {
+    try {
+      const post = await getPostById(params.postId)
+      setPost(post)
+
+      
+      const normalized: Comment[] = post.comments.map((c: any, idx: number) => ({
+        id: c.id ?? c._id ?? String(idx), // prefer real id, fallback to index (less ideal)
+        content: c.content,
+        author: c.author,
+        post: post, 
+        createdAt: c.createdAt,
+      }))
+
+      setComments(normalized)
+    } catch (err) {
+      console.error(err)
     }
-    fetchPost()
-  }, [params.postId])
+  }
+  fetchPost()
+}, [params.postId])
 
   useEffect(() => {
     setUserLikes(currentUser.likes)
@@ -67,29 +76,36 @@ export default function Post({
     async (authorId: string) => {
       setLoadingAuthors((prev) => ({ ...prev, [authorId]: true }))
 
-      // optimistic toggle
+      let didFollow = false
       setFollowingSet((prev) => {
         const next = new Set(prev)
-        prev.has(authorId) ? next.delete(authorId) : next.add(authorId)
+        if (prev.has(authorId)) {
+          next.delete(authorId)
+          didFollow = false // we unfollowed
+        } else {
+          next.add(authorId)
+          didFollow = true // we followed
+        }
         return next
       })
 
       try {
-        // derive current state from previous (not outer stale)
-        const isNowFollowing = followingSet.has(authorId) // still stale here
-        // instead, fetch current from the updater:
-        const shouldUnfollow = (() => {
-          // if previous had it, we just removed it -> we should unfollow
-          return followingSet.has(authorId)
-        })()
-
-        if (shouldUnfollow) await unfollow(authorId)
-        else await follow(authorId)
+        if (didFollow) {
+          await follow(authorId)
+        } else {
+          await unfollow(authorId)
+        }
       } catch (err) {
-        // rollback: flip again
+        // rollback
         setFollowingSet((prev) => {
           const next = new Set(prev)
-          prev.has(authorId) ? next.delete(authorId) : next.add(authorId)
+          if (didFollow) {
+            // we tried to follow but failed → remove
+            next.delete(authorId)
+          } else {
+            // we tried to unfollow but failed → re-add
+            next.add(authorId)
+          }
           return next
         })
         console.warn('Follow toggle failed', err)
@@ -97,7 +113,7 @@ export default function Post({
         setLoadingAuthors((prev) => ({ ...prev, [authorId]: false }))
       }
     },
-    [followingSet]
+    [] // no need to depend on followingSet because we use functional updater
   )
 
   if (loading) return <Loading />
@@ -132,7 +148,7 @@ export default function Post({
             currentUser={currentUser}
             isFollow={followingSet.has(post.authorId)}
             followLoading={!!loadingAuthors[post.authorId]}
-            onToggleFollow={() => onToggleFollow(post.authorId)}
+            onToggleFollow={() => handleToggleFollow(post.authorId)}
           />
 
           <PostContent
@@ -148,7 +164,9 @@ export default function Post({
             isComment={true}
           />
 
-          <CommentsWritter />
+          <CommentsWritter setComments={setComments} post={post}/>
+
+          <Comments comments={comments}/>
         </div>
       </article>
     )

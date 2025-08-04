@@ -51,3 +51,14 @@ export interface Follow {
   followerId: string
   follower: User
 }
+
+export type Comment = {
+  id: string
+  content: string
+  createdAt: string // ISO timestamp
+  author: {
+    id: string
+    username: string
+    avatarUrl?: string
+  }
+}

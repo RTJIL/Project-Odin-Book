@@ -29,6 +29,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
   position: absolute;
+  z-index: 9999;
   bottom: -40px;
   left: -90px;
   cursor: pointer;

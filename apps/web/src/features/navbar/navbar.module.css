@@ -9,6 +9,10 @@
   top: 20px;
 }
 
+.hidden {
+  display: none;
+}
+
 .container button {
   color: var(--text);
   background-color: var(--card);
@@ -20,7 +24,7 @@
   border-radius: var(--radius);
   display: flex;
   align-items: center;
-  gap: 4px; 
+  gap: 4px;
 }
 
 .link {

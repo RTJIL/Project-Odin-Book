@@ -165,7 +165,7 @@ export async function unlikePost(postId: string | number): Promise<Post[]> {
 }
 
 export async function commentPost(
-  postId: number,
+  postId: number | string,
   content: string
 ): Promise<Post[]> {
   const res = await fetch(`${commentUrl}/${postId}`, {
