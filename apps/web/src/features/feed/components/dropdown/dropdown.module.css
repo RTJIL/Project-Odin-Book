@@ -1,0 +1,72 @@
+.dropdown {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+}
+
+.dotsWrapper {
+  padding: 4px;
+  display: inline-flex;
+  border-radius: 50%;
+  transition: background var(--transition);
+}
+.dotsWrapper:hover {
+  background: var(--hover);
+}
+.dots {
+  font-size: 24px;
+  color: white;
+}
+
+.menu {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  position: absolute;
+  bottom: -40px;
+  left: -90px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+.menu button {
+  cursor: pointer;
+  border: none;
+  color: var(--text);
+  background-color: var(--card);
+  padding: 8px 10px;
+  transition: background var(--transition);
+}
+.menu .edit:hover {
+  background: var(--accent);
+}
+.menu .delete:hover {
+  background: var(--error);
+}
+
+.edit,
+.delete {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.edit {
+  border-radius: 14px 14px 0 0;
+}
+
+.delete {
+  border-radius: 0 0 14px 14px;
+}

@@ -1,5 +1,5 @@
 {
-  "name": "express_api_template",
+  "name": "express_api",
   "version": "1.0.0",
   "private": true,
   "description": "My custom Express API boilerplate",
@@ -26,11 +26,22 @@
   },
   "homepage": "https://github.com/RTJIL/express_api_template#readme",
   "dependencies": {
+    "@prisma/client": "6.13.0",
+    "@quixo3/prisma-session-store": "^3.1.13",
+    "@supabase/supabase-js": "^2.53.0",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "express-session": "^1.18.2",
     "express-validator": "^7.2.1",
-    "morgan": "^1.10.1"
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "node-fetch": "^3.3.2",
+    "passport": "^0.7.0",
+    "passport-github2": "^0.1.12",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0"
   },
   "devDependencies": {
     "eslint": "^9.32.0",

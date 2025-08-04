@@ -1,0 +1,192 @@
+.content-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.text {
+  padding-left: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.content-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.iconBtn {
+  background: transparent;
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  font-size: 14px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+.iconBtn:hover {
+  background: var(--hover);
+  color: var(--accent);
+}
+.iconBtn.liked {
+  color: var(--error);
+}
+.iconBtn.liked:hover {
+  background: var(--hoverLike);
+}
+
+.iconBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  color: var(--muted);
+  background: transparent; 
+  pointer-events: none;
+}
+
+.iconBtn:disabled:hover {
+  background: transparent; 
+  color: var(--muted);
+}
+
+.iconBtn.liked:disabled {
+  color: rgba(255, 100, 100, 0.6);
+}
+
+.iconBtn.liked:disabled:hover {
+  background: transparent;
+}
+
+.form {
+  background: var(--card);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow:
+    8px 8px 24px var(--shadow-dark),
+    -8px -8px 24px var(--shadow-light);
+  position: relative;
+  overflow: hidden;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+}
+
+.form input[type='text'] {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--text);
+  outline: none;
+  transition:
+    box-shadow var(--transition),
+    transform var(--transition);
+  box-shadow:
+    inset 2px 2px 6px rgba(0, 0, 0, 0.5),
+    inset -2px -2px 6px rgba(255, 255, 255, 0.03);
+}
+
+.form input[type='text']::placeholder {
+  color: var(--muted);
+}
+
+.form input[type='text']:focus {
+  box-shadow:
+    0 0 0 3px rgba(124, 90, 255, 0.5),
+    inset 2px 2px 6px rgba(0, 0, 0, 0.5),
+    inset -2px -2px 6px rgba(255, 255, 255, 0.03);
+  transform: translateY(-1px);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.form button {
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  transition: all var(--transition);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.primary {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 12px 30px -10px rgba(124, 90, 255, 0.6);
+}
+
+.primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.primary:active {
+  transform: translateY(1px);
+}
+
+.secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  backdrop-filter: blur(6px);
+}
+
+.secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.secondary:active {
+  transform: scale(0.98);
+}
+
+.form::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(0, 0, 0, 0.3)
+  );
+  mix-blend-mode: overlay;
+  border-radius: var(--radius);
+}
+
+.imageWrapper {
+  position: relative; /* required for fill */
+  width: 300px;        /* or fixed, e.g., 150px */
+  aspect-ratio: 1 / 1; 
+  overflow: hidden;
+  border-radius: 6px;
+  background: #222; /* fallback while image loads */
+}

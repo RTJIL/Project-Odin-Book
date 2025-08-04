@@ -1,0 +1,197 @@
+/* utility hide for screen readers */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.form-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: radial-gradient(circle at 30% 30%, rgba(58, 50, 102, 0.2), rgba(30, 30, 60, 0.3)),
+    url('/gradient-bg.jpg') center/cover no-repeat;
+  backdrop-filter: blur(3px);
+}
+
+.form {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  padding: 2.2rem 2.5rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 35px 80px -15px rgba(77, 77, 77, 0.35);
+  backdrop-filter: blur(14px);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  color: #eef0fa;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.95rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.field.register {
+    margin-top: 2rem;
+} 
+
+.input {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+  outline: none;
+  font-size: 1rem;
+  color: #e8e8f2;
+  transition: box-shadow .25s ease, border .25s ease;
+  backdrop-filter: blur(6px);
+}
+.input:focus {
+  border-color: #b892ff;
+  box-shadow: 0 0 16px rgba(184, 146, 255, 0.5);
+}
+
+.optional {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.checkboxGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.checkbox {
+  width: 14px;
+  height: 14px;
+  accent-color: #b892ff;
+}
+
+.checkboxLabel {
+  font-size: 0.8rem;
+  user-select: none;
+}
+
+.link {
+  color: #d3d3ff;
+  text-decoration: none;
+}
+.link:hover {
+  text-decoration: underline;
+}
+
+.submit {
+  position: relative;
+  padding: 16px 0;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(135deg, #7e57c2 0%, #a48cff 80%);
+  color: #fff;
+  letter-spacing: 0.5px;
+  transition: transform .2s ease, filter .2s ease;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+.submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  filter: saturate(0.8);
+}
+
+.switchText {
+  font-size: 0.8rem;
+  text-align: center;
+  margin: 4px 0 0;
+  color: #c8c8e8;
+}
+.switchLink {
+  color: #ffdd70;
+  font-weight: 600;
+  text-decoration: none;
+}
+.switchLink:hover {
+  text-decoration: underline;
+}
+
+.orWrapper {
+  display: flex;
+  justify-content: center;
+  margin: 8px 0;
+  position: relative;
+}
+.or {
+  background: rgba(30, 30, 60, 0.9);
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+  color: #dcdcff;
+}
+.orWrapper::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  right: 12px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-50%);
+  border-radius: 1px;
+}
+
+.oauth-button {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
