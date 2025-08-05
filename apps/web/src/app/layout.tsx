@@ -22,7 +22,7 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         <div className={styles.container}>
-          {auth && <Navbar auth={auth}/>}
+          {auth && <Navbar currentUser={auth} />}
           {children}
         </div>
       </body>

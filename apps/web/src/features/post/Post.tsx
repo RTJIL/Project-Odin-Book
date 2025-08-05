@@ -16,10 +16,7 @@ import Comments from './components/comments/Comments'
 
 interface PostParams {
   currentUser: User
-  setPosts: React.Dispatch<React.SetStateAction<Post[]>>
   loading: boolean
-  loadingAuthors: Record<string, boolean>
-  onToggleFollow: (authorId: string) => void
 }
 
 export default function Post({ currentUser, loading }: PostParams) {
@@ -28,93 +25,78 @@ export default function Post({ currentUser, loading }: PostParams) {
   const [isEditedId, setIsEditedId] = useState<number | null>(null)
   const [userLikes, setUserLikes] = useState<Like[]>([])
 
-  const params = useParams<{ postId: string }>()
+  const params = useParams()
+  const postId = params?.postId
 
-  const [followingSet, setFollowingSet] = useState<Set<string>>(
-    () => new Set(currentUser.following.map((f: any) => f.followingId))
-  )
+  console.log('Current user: ', currentUser)
+
   const [loadingAuthors, setLoadingAuthors] = useState<Record<string, boolean>>(
     {}
   )
 
   useEffect(() => {
-    setFollowingSet(
-      new Set(currentUser.following.map((f: any) => f.followingId))
-    )
-  }, [currentUser.following])
+    if (!params?.postId) return
 
-  console.log(params.postId)
+    const fetchPost = async () => {
+      try {
+        const post = await getPostById(postId)
+        setPost(post)
 
-  useEffect(() => {
-  const fetchPost = async () => {
-    try {
-      const post = await getPostById(params.postId)
-      setPost(post)
+        const normalized: Comment[] = post.comments.map(
+          (c: any, idx: number) => ({
+            id: c.id ?? c._id ?? String(idx), // prefer real id, fallback to index (less ideal)
+            content: c.content,
+            author: c.author,
+            post: post,
+            createdAt: c.createdAt,
+          })
+        )
 
-      
-      const normalized: Comment[] = post.comments.map((c: any, idx: number) => ({
-        id: c.id ?? c._id ?? String(idx), // prefer real id, fallback to index (less ideal)
-        content: c.content,
-        author: c.author,
-        post: post, 
-        createdAt: c.createdAt,
-      }))
-
-      setComments(normalized)
-    } catch (err) {
-      console.error(err)
+        setComments(normalized)
+      } catch (err) {
+        console.error(err)
+      }
     }
-  }
-  fetchPost()
-}, [params.postId])
+    fetchPost()
+  }, [postId])
 
   useEffect(() => {
     setUserLikes(currentUser.likes)
   }, [currentUser.likes])
 
-  const handleToggleFollow = useCallback(
-    async (authorId: string) => {
-      setLoadingAuthors((prev) => ({ ...prev, [authorId]: true }))
+  const handleToggleFollow = async (authorId: string) => {
+    if (post === null) return
 
-      let didFollow = false
-      setFollowingSet((prev) => {
-        const next = new Set(prev)
-        if (prev.has(authorId)) {
-          next.delete(authorId)
-          didFollow = false // we unfollowed
-        } else {
-          next.add(authorId)
-          didFollow = true // we followed
-        }
-        return next
-      })
+    const isFollowing = currentUser.following.some(
+      (follow) => follow.followingId === post.authorId
+    )
 
-      try {
-        if (didFollow) {
-          await follow(authorId)
-        } else {
-          await unfollow(authorId)
-        }
-      } catch (err) {
-        // rollback
-        setFollowingSet((prev) => {
-          const next = new Set(prev)
-          if (didFollow) {
-            // we tried to follow but failed → remove
-            next.delete(authorId)
-          } else {
-            // we tried to unfollow but failed → re-add
-            next.add(authorId)
-          }
-          return next
+    setLoadingAuthors((prev) => ({ ...prev, [authorId]: true }))
+
+    try {
+      if (isFollowing) {
+        await unfollow(authorId)
+        // remove from currentUser.following
+        currentUser.following = currentUser.following.filter(
+          (follow) => follow.followingId !== post.authorId
+        )
+      } else {
+        const res = await follow(authorId)
+        // add to currentUser.following
+        currentUser.following.push({
+          id: res.id, // Provide a unique id if available, or leave as empty string if not
+          following: post.author,
+          follower: currentUser,
+          followingId: post.authorId,
+          followerId: currentUser.id,
         })
-        console.warn('Follow toggle failed', err)
-      } finally {
-        setLoadingAuthors((prev) => ({ ...prev, [authorId]: false }))
       }
-    },
-    [] // no need to depend on followingSet because we use functional updater
-  )
+    } catch (err) {
+      console.error('Toggle follow failed:', err)
+    } finally {
+      setLoadingAuthors((prev) => ({ ...prev, [authorId]: false }))
+    }
+  }
 
   if (loading) return <Loading />
 
@@ -146,7 +128,9 @@ export default function Post({ currentUser, loading }: PostParams) {
           <UserMeta
             post={post}
             currentUser={currentUser}
-            isFollow={followingSet.has(post.authorId)}
+            isFollow={currentUser.following.some(
+              (follow) => follow.followingId === post.authorId
+            )}
             followLoading={!!loadingAuthors[post.authorId]}
             onToggleFollow={() => handleToggleFollow(post.authorId)}
           />
@@ -164,9 +148,9 @@ export default function Post({ currentUser, loading }: PostParams) {
             isComment={true}
           />
 
-          <CommentsWritter setComments={setComments} post={post}/>
+          <CommentsWritter setComments={setComments} post={post} />
 
-          <Comments comments={comments}/>
+          <Comments comments={comments} />
         </div>
       </article>
     )

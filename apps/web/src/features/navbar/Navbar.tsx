@@ -4,23 +4,23 @@ import styles from './navbar.module.css'
 import { FaHome, FaUser } from 'react-icons/fa'
 import { RiLogoutBoxRLine } from 'react-icons/ri'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import { logout } from '../services/api'
 import { User } from '@/utils/types'
 import { useEffect, useState } from 'react'
 
 interface NavbarProps {
-  auth: User
+  currentUser: User
 }
 
-export default function Navbar({ auth }: NavbarProps) {
+export default function Navbar({ currentUser }: NavbarProps) {
   const [nav, setNav] = useState(false)
 
   const router = useRouter()
 
   useEffect(() => {
     setNav((prev) => !prev)
-  }, [auth])
+  }, [currentUser])
 
   const handleLogout = async () => {
     try {
@@ -31,6 +31,10 @@ export default function Navbar({ auth }: NavbarProps) {
     }
   }
 
+  const handleProfile = () => {
+    redirect(`profile/${currentUser.id}`)
+  }
+
   return (
     <div className={`${styles.container}`}>
       <Link href={'/home'} className={styles.link}>
@@ -39,7 +43,7 @@ export default function Navbar({ auth }: NavbarProps) {
         </button>
       </Link>
 
-      <button className={styles.profile}>
+      <button className={styles.profile} onClick={handleProfile}>
         <FaUser />
         <span>Profile</span>
       </button>

@@ -43,9 +43,12 @@ export type User = {
   comments: Comment[]
   following: Follow[]
   likes: Like[]
+  posts: Post[]
+  followers: Follow[]
 }
 
 export interface Follow {
+  id: number
   followingId: string
   following: User
   followerId: string

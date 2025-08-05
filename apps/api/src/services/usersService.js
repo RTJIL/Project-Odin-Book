@@ -25,6 +25,14 @@ export const usersService = {
         },
         comments: { select: { id: true, content: true, createdAt: true } },
         likes: { select: { postId: true, userId: true } },
+        posts: {
+          orderBy: { createdAt: 'desc' },
+          include: {
+            author: true,
+            comments: { include: { author: true } },
+            likes: true,
+          },
+        },
       },
     }),
 

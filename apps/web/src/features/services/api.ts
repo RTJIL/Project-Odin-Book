@@ -1,5 +1,5 @@
 import formatUrl from '@/utils/formatUrl'
-import type { Post, Like } from '../../utils/types' // adjust path if needed
+import type { Post, Like, User } from '../../utils/types' // adjust path if needed
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE
 
@@ -8,9 +8,27 @@ const likeUrl = `${formatUrl(BASE_URL as string)}api/likes`
 const commentUrl = `${formatUrl(BASE_URL as string)}api/comments`
 const followUrl = `${formatUrl(BASE_URL as string)}api/follows`
 const authUrl = `${formatUrl(BASE_URL as string)}api/auth`
+const userUrl = `${formatUrl(BASE_URL as string)}api/users`
 
 if (!BASE_URL) {
   throw new Error('NEXT_PUBLIC_API_BASE is not defined')
+}
+
+export async function getUserById(userId: string[] | string | number): Promise<User> {
+  const res = await fetch(`${userUrl}/${userId}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`Failed to fetch posts: ${res.status} ${text}`)
+  }
+
+  return res.json() as Promise<User>
 }
 
 export async function getPosts(): Promise<Post[]> {
